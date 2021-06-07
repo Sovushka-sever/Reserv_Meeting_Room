@@ -1,5 +1,4 @@
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import UserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
@@ -13,18 +12,13 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user.id, filename)
 
 
-class User(AbstractBaseUser):
+class User(AbstractUser):
+    """
+    This is custom class for create User model.
+    """
     email = models.EmailField(
-        unique=True
-    )
-    is_staff = models.BooleanField(
-        default=False,
-    )
-    is_active = models.BooleanField(
-        default=True,
-    )
-    is_superuser = models.BooleanField(
-        default=False,
+        unique=True,
+        verbose_name='email address',
     )
     username = models.CharField(
         max_length=30,
@@ -33,23 +27,24 @@ class User(AbstractBaseUser):
     bio = models.TextField(
         max_length=500,
         blank=True,
+        verbose_name='personal information',
     )
     role = models.CharField(
-        max_length=10,
+        max_length=15,
         choices=UserRoles.choices,
         default=UserRoles.EMPLOYEE,
+        verbose_name='user role',
     )
     avatar = models.ImageField(
         upload_to=user_directory_path,
         null=True,
-        blank=True
+        blank=True,
+        verbose_name='user photo',
     )
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ('email',)
-
-    objects = UserManager()
 
     class Meta:
         ordering = ('username',)
