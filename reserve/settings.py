@@ -27,8 +27,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'users',
-    'meeting_room',
+    # 'meeting_room',
+
 ]
 
 MIDDLEWARE = [
@@ -39,7 +41,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 INTERNAL_IPS = [
@@ -126,9 +127,12 @@ LOGOUT_REDIRECT_URL = 'index'
 
 #  подключаем движок filebased.EmailBackend
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+
 # указываем директорию, в которую будут складываться файлы писем
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
 # Идентификатор текущего сайта
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+SITE_ID = 1

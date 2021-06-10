@@ -4,8 +4,8 @@ from django.db import models
 
 class UserRoles(models.TextChoices):
 
-    EMPLOYEE = 'employee', 'Сотрудник'
-    OFFICE_MANAGER = 'office_manager', 'Офис_менеджер'
+    EMPLOYEE = 'employee', 'Employee'
+    OFFICE_MANAGER = 'office_manager', 'Office_manager'
 
 
 def user_directory_path(instance, filename):
@@ -54,8 +54,21 @@ class User(AbstractUser):
 
     @property
     def is_employee(self):
+        """
+        Function for quick change property 'role' of User model.
+        """
         return self.role == UserRoles.EMPLOYEE
 
     @property
     def is_office_manager(self):
+        """
+        Function for quick change property 'role' of User model.
+        """
         return self.role == UserRoles.OFFICE_MANAGER
+
+    def get_full_name(self):
+        """
+        Function for concatenate full name of user, use first and last name.
+        """
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
