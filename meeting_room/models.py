@@ -1,7 +1,12 @@
 from django.db import models
-from django.conf import settings
+from django.utils import timezone
+from users.models import User
 
-User = settings.AUTH_USER_MODEL
+STATUS_RESERVE_CHOICES = (
+    ('rejected', 'Rejected'),
+    ('approved', 'Approved'),
+    ('initiate', 'Initiate')
+)
 
 
 class MeetingRoom(models.Model):
@@ -39,8 +44,12 @@ class Reservation(models.Model):
     """
     Model for booking meeting rooms.
     """
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.DateTimeField(default=timezone.now)
+    end_time = models.DateTimeField(default=timezone.now)
+    add_date = models.DateTimeField(
+        verbose_name='date of creation',
+        auto_now_add=True
+    )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -53,12 +62,18 @@ class Reservation(models.Model):
     )
     meeting_room = models.ForeignKey(
         MeetingRoom,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='reserve'
     )
     attendees = models.CharField(
         max_length=1000,
         default=' ',
         verbose_name='names of participants',
+    )
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_RESERVE_CHOICES,
+        default='initiate'
     )
 
     def __str__(self):
@@ -66,4 +81,3 @@ class Reservation(models.Model):
 
     class Meta:
         ordering = ('-start_time',)
-
